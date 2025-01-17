@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support import expected_conditions as EC
 import os
 
-
+#仅文字询问
 def text_answer(url):
     option = ChromeOptions()
     option.add_argument('--disable-dev-shm-usage')
@@ -17,15 +17,19 @@ def text_answer(url):
     #option.add_argument('--headless')
     option.add_argument('--no-sandbox')
     #option.add_argument("start-maximized")
+    #chrome.exe的存储位置
     option.binary_location = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+    #chrome的用户数据目录
     option.add_argument('--user-data-dir=C:/Users/43440/AppData/Local/Google/Chrome/User Data')
     # driver = webdriver.Chrome(executable_path='C:/Program Files/Google/Chrome/Application/chromedriver.exe')  # Optional argument, if not specified will search path.
+    #chromedriver.exe的路径
     service = ChromeService(executable_path='C:/Program Files/Google/Chrome/Application/chromedriver.exe')
     driver = webdriver.Chrome(service=service, options=option)
 #'https://cares-copilot.com/CARES-Copilot'
     driver.get(url)
     time.sleep(3)
     #time.sleep(10000)
+    #定位到组件位置
     history = driver.find_elements(By.XPATH, "//div[@class='flex justify-start item']")
     # print(history)
     # print(len(history))
@@ -34,6 +38,7 @@ def text_answer(url):
     button.click()
     input.send_keys('怎么治疗感冒')
     time.sleep(10)
+    #判断是否是pro，如果是pro增加等待时间
     if url.__contains__('pro'):
         print("pro")
         time.sleep(10)
@@ -74,7 +79,7 @@ def text_answer(url):
         print('result',result)
         print('response',res)
         return("fail")
-
+#文字和图片询问
 def image_answer(url):
     option = ChromeOptions()
     option.add_argument('--disable-dev-shm-usage')
@@ -155,7 +160,7 @@ def image_answer(url):
 
 
 
-
+#文字询问用例执行
 def test_answer():
     url1='https://cares-copilot.com/CARES-Copilot'
     url2='http://cares-copilot-pro.com/cares-copilot/CARES-Copilot'
@@ -164,18 +169,8 @@ def test_answer():
     time.sleep(2)
     assert text_answer(url2) == "pass"
     #pytest_runtest_makereport()
+#文字加图片用例执行
 def test_image_answer():
     url1 = 'https://cares-copilot.com/CARES-Copilot'
     url2 = 'http://cares-copilot-pro.com/cares-copilot/CARES-Copilot'
     assert image_answer(url2) == "pass"
-
-# @pytest.hookimpl(hookwrapper=True, tryfirst=True)
-# def pytest_runtest_makereport(item, call):
-#      out = yield
-#      report =out.get_result()
-#      print(out)
-#      print("hello")
-#      print(report)
-#      print(report.when)
-#      print(report.nodeid)
-#      print(report.outcome)
